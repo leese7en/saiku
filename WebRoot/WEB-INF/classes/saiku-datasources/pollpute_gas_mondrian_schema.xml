@@ -1,0 +1,120 @@
+<Schema name="气排放分析">
+    <Cube name="气污染物" visible="true" description="sales cube or Sauce Dallas"
+          cache="true" enabled="true">
+        <Table name="res_monthdata_gas_date_mondrian">
+        </Table>
+        <Dimension type="StandardDimension" visible="true"
+                   foreignKey="mondrian_city" highCardinality="false" name="customers dimension"
+                   caption="盟市纬度">
+            <Hierarchy name="city_id" visible="true" hasAll="true"
+                       allMemberName="All" allLevelName="全部" primaryKey="id" caption="region"
+                       description="regions hierarchy">
+                <Table name="res_month_gas_mondrian" alias="city dimension">
+                </Table>
+                <Level name="city" visible="true" column="city_id" captionColumn="city_name"
+                       type="String" uniqueMembers="true" levelType="Regular"
+                       hideMemberIf="Never" caption="盟市">
+                </Level>
+                <Level name="PSName" visible="true" column="PSCode"
+                       captionColumn="PSName" type="String" uniqueMembers="false" levelType="Regular"
+                       hideMemberIf="Never" caption="企业名称" description="PSName">
+                </Level>
+                <Level name="PointName" visible="true" column="PointCode"
+                       captionColumn="PointName" type="String" uniqueMembers="false" levelType="Regular"
+                       hideMemberIf="Never" caption="排口" description="PointCode">
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" visible="true"
+                   foreignKey="Code_Pollute" highCardinality="false" name="Res" caption="污染物类别">
+            <Hierarchy name="PollType" visible="true" hasAll="true"
+                       allMemberName="all res" allLevelName="全部" primaryKey="POLLUTANTCODE"
+                       caption="污染物类别" description="hierarchy">
+                <Table name="t_cod_automonitor_pollute" alias="pollType dimension">
+                </Table>
+                <Level name="POLLUTANTNAME" visible="true" column="POLLUTANTCODE"
+                       captionColumn="POLLUTANTNAME" type="String" uniqueMembers="false"
+                       levelType="Regular" hideMemberIf="Never" caption="污染物名称"
+                       description="污染物名称">
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="TimeDimension" visible="true"
+                   highCardinality="false" foreignKey="dateId" name="time dimension"
+                   caption="时间纬度">
+            <Hierarchy name="h_month" visible="true" hasAll="true"
+                       allMemberName="all years" allLevelName="全部" primaryKey="id"
+                       caption="months hierarchy" description="months hierarchy">
+                <Table name="res_month_gas_date_dimension" alias="time dimension">
+                </Table>
+                <Level name="Year" visible="true" column="year" type="String"
+                       uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never"
+                       caption="年">
+                </Level>
+                <Level name="halfYearName" visible="true" column="halfYear" captionColumn="halfYearName" type="String"
+                       uniqueMembers="false" levelType="TimeHalfYears" hideMemberIf="Never"
+                       caption="半年">
+                </Level>
+                <Level name="quarterName" visible="true" column="quarter" captionColumn="quarterName" type="String" 
+                       uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="Never"
+                       caption="季">
+                </Level>
+                <Level name="Month" visible="true" column="month" type="String"
+                       uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never"
+                       caption="月">
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Measure name="浓度" column="AvgConcent" datatype="Numeric"
+                 formatString="#,###" aggregator="avg" visible="true" caption="浓度(mg/m³)">
+        </Measure>
+        <Measure name="CumEmission" column="CumEmission" datatype="Numeric"
+                 formatString="#,###.00" aggregator="sum" visible="false">
+        </Measure>
+        <Measure name="传输率分子" column="TransHoursNM" datatype="Numeric"
+                 formatString="#,###" aggregator="sum" visible="false">
+        </Measure>
+        <Measure name="传输率分母" column="TransHoursDM" datatype="Numeric"
+                 formatString="#,###" aggregator="sum" visible="false">
+        </Measure>
+        <Measure name="有效率分子" column="ValidHoursNM" datatype="Numeric"
+                 formatString="#,###" aggregator="sum" visible="false">
+        </Measure>
+        <Measure name="有效率分母" column="ValidHoursDM" datatype="Numeric"
+                 formatString="#,###" aggregator="sum" visible="false">
+        </Measure>
+        <Measure name="生产时长(h)" column="ShouldHours" datatype="Numeric"
+                 formatString="#,###" aggregator="sum" visible="true">
+        </Measure>
+        <Measure name="累计超标小时数(h)" column="OverHours" datatype="Numeric"
+                 formatString="#,###" aggregator="sum" visible="true">
+        </Measure>
+
+        <CalculatedMember name="排放量" dimension="Measures" caption="排放量(吨/万m³)">
+            <Formula>[Measures].[CumEmission] / 1000</Formula>
+            <CalculatedMemberProperty name="FORMAT_STRING"
+                                      value="0.00"/>
+        </CalculatedMember>
+
+        <CalculatedMember name="超标率(%)" dimension="Measures">
+            <Formula>[Measures].[累计超标小时数(h)] / [Measures].[生产时长(h)] * 100 </Formula>
+            <CalculatedMemberProperty name="FORMAT_STRING"
+                                      value="0.0"/>
+        </CalculatedMember>
+        <CalculatedMember name="传输率(%)" dimension="Measures">
+            <Formula>[Measures].[传输率分子] / [Measures].[传输率分母] * 100 </Formula>
+            <CalculatedMemberProperty name="FORMAT_STRING"
+                                      value="0.0"/>
+        </CalculatedMember>
+        <CalculatedMember name="有效率(%)" dimension="Measures">
+            <Formula>[Measures].[有效率分子] / [Measures].[有效率分母] * 100 </Formula>
+            <CalculatedMemberProperty name="FORMAT_STRING"
+                                      value="0.0"/>
+        </CalculatedMember>
+        <CalculatedMember name="传输有效率(%)" dimension="Measures">
+            <Formula>[Measures].[传输率(%)] * [Measures].[有效率(%)] / 100 </Formula>
+            <CalculatedMemberProperty name="FORMAT_STRING"
+                                      value="0.0"/>
+        </CalculatedMember>
+    </Cube>
+</Schema>

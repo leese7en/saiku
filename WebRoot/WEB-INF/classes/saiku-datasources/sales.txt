@@ -1,0 +1,15 @@
+#declaration of Sauce Dallas sales cube for Sakiu
+
+#------------------
+
+type=OLAP
+
+name=销售分析
+
+driver=mondrian.olap4j.MondrianOlap4jDriver
+
+location=jdbc:mondrian:Jdbc=jdbc:mysql://127.0.0.1:3306/saiku;Catalog=res:saiku-datasources/sales_mondrian_schema.xml;JdbcDrivers=com.mysql.jdbc.Driver;
+
+username=root
+
+password=725009

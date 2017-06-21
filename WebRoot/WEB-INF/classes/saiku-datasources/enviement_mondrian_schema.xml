@@ -1,0 +1,88 @@
+<Schema name="电厂年度分析">
+  <Cube name="电力企业" visible="true" description="sales cube or Sauce Dallas" cache="true" enabled="true">
+    <Table name="res_environment_year_mondrian">
+    </Table>
+    <Dimension type="StandardDimension" visible="true" foreignKey="city_id" highCardinality="false" name="customers dimension" caption="盟市纬度">
+      <Hierarchy name="city_id" visible="true" hasAll="true" allMemberName="All" allLevelName="全部" primaryKey="city_id" caption="region" 
+        description="regions hierarchy">
+        <Table name="sys_city" alias="city dimension">
+        </Table>
+        <Level name="city" visible="true" column="city_id" captionColumn="city_name"  type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" caption="盟市">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="id" highCardinality="false" 
+      name="Res dimension" caption="企业纬度">
+      <Hierarchy name="Res" visible="true" hasAll="true" allMemberName="all res" allLevelName="全部" primaryKey="id" caption="res" description="res hierarchy">
+        <Table name="res_environment_year_mondrian" alias="res dimension">
+        </Table>
+        <Level name="PSName" visible="true" column="enCode" captionColumn="PSName" type="String" 
+          uniqueMembers="false" levelType="Regular" hideMemberIf="Never" caption="企业名称" 
+          description="PSName">
+        </Level>
+        <Level name="unit" visible="true" column="unit" captionColumn="unit" type="String" 
+          uniqueMembers="false" levelType="Regular" hideMemberIf="Never" caption="机组编号" 
+          description="unit">
+        </Level>
+        <Level name="boilerType" visible="true" column="boilerType" captionColumn="boilerType"  type="String" 
+          uniqueMembers="false" levelType="Regular" hideMemberIf="Never" caption="锅炉类型" 
+          description="boilerType">
+        </Level>
+         <Level name="psType" visible="true" column="psType" captionColumn="psType" type="String" 
+          uniqueMembers="false" levelType="Regular" hideMemberIf="Never" caption="企业类型" 
+          description="psType">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="TimeDimension" visible="true" foreignKey="id" highCardinality="false" name="time dimension" caption="时间纬度">
+      <Hierarchy name="h_month" visible="true" hasAll="true" allMemberName="all years" allLevelName="全部" primaryKey="id" caption="months hierarchy" description="months hierarchy">
+        <Table name="res_environment_year_mondrian" alias="time dimension">
+        </Table>
+        <Level name="Year" visible="true" column="year" type="String" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never" caption="年">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+     <Measure name="装机容量" column="installed_amount" datatype="Numeric" formatString="#,###.00 万MW" 
+     aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="标煤消耗" column="coalCon" datatype="Numeric" formatString="#,###.00 g/kWh" 
+     aggregator="avg" visible="true">
+    </Measure>
+    <Measure name="GDP" column="GDP" datatype="Numeric" formatString="#,###.00 万元" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="发电量" column="gasFlow" datatype="Numeric" formatString="#,###.00 万kWh" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="烟气流量" column="gasFlow" datatype="Numeric" formatString="#,###.00 万m³" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="SO2排放量" column="so2_amount" datatype="Numeric" formatString="#,###.00t" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="NOx排放量" column="nox_amount" datatype="Numeric" formatString="#,###.00t" aggregator="sum" visible="true">
+    </Measure>
+     <Measure name="烟尘排放量" column="dust_amount" datatype="Numeric" formatString="#,###.00t" aggregator="sum" visible="true">
+    </Measure>
+    <CalculatedMember name="SO2排放绩效" dimension="Measures">
+     <Formula>[Measures].[SO2排放量] / [Measures].[发电量] * 100 </Formula>
+      <CalculatedMemberProperty name="FORMAT_STRING" value="0.00 g/kWh"/>
+    </CalculatedMember>
+    <CalculatedMember name="SO2排放强度" dimension="Measures">
+     <Formula>[Measures].[SO2排放量] / [Measures].[GDP] * 1000 </Formula>
+      <CalculatedMemberProperty name="FORMAT_STRING" value="0.00 kg/万元"/>
+    </CalculatedMember>
+      <CalculatedMember name="NOx排放绩效" dimension="Measures">
+     <Formula>[Measures].[NOx排放量] / [Measures].[发电量] * 100 </Formula>
+      <CalculatedMemberProperty name="FORMAT_STRING" value="0.00 g/kWh"/>
+    </CalculatedMember>
+     <CalculatedMember name="NOx排放强度" dimension="Measures">
+     <Formula>[Measures].[NOx排放量] / [Measures].[GDP] * 1000 </Formula>
+      <CalculatedMemberProperty name="FORMAT_STRING" value="0.00 kg/万元"/>
+    </CalculatedMember>
+      <CalculatedMember name="烟尘排放绩效" dimension="Measures">
+     <Formula>[Measures].[烟尘排放量] / [Measures].[发电量] * 100 </Formula>
+      <CalculatedMemberProperty name="FORMAT_STRING" value="0.00 g/kWh"/>
+    </CalculatedMember>
+    <CalculatedMember name="烟尘排放强度" dimension="Measures">
+     <Formula>[Measures].[烟尘排放量] / [Measures].[GDP] * 1000 </Formula>
+      <CalculatedMemberProperty name="FORMAT_STRING" value="0.00 kg/万元"/>
+    </CalculatedMember>
+  </Cube>
+</Schema>

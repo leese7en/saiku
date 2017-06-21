@@ -1,0 +1,15 @@
+﻿#declaration of Sauce Dallas sales cube for Sakiu
+
+#———————————————
+
+type=OLAP
+
+name=污染物排放分析
+
+driver=mondrian.olap4j.MondrianOlap4jDriver
+
+location=jdbc:mondrian:Jdbc=jdbc:mysql://127.0.0.1:3306/nm;Catalog=res:saiku-datasources/pollpute_mondrian_schema.xml;JdbcDrivers=com.mysql.jdbc.Driver;
+
+username=root
+
+password=725009
