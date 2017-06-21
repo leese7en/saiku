@@ -1,0 +1,78 @@
+<Schema name="Sauce Dallas schema">
+	<Cube name="Sales" visible="true" description="sales cube or Sauce Dallas"
+		cache="true" enabled="true">
+		<Table name="fact_sales">
+		</Table>
+		<Dimension type="StandardDimension" visible="true"
+			foreignKey="customer_id" highCardinality="false" name="customers dimension"
+			caption="customer">
+			<Hierarchy name="h_region" visible="true" hasAll="true"
+				allMemberName="All" allLevelName="all levels" primaryKey="customer_id"
+				caption="region" description="regions hierarchy">
+				<Table name="dim_customers" alias="customers dimension">
+				</Table>
+				<Level name="continent" visible="true" column="continent"
+					type="String" uniqueMembers="false" levelType="Regular"
+					hideMemberIf="Never" caption="continent">
+				</Level>
+				<Level name="country" visible="true" column="country" type="String"
+					uniqueMembers="false" levelType="Regular" hideMemberIf="Never"
+					caption="country">
+				</Level>
+				<Level name="state" visible="true" column="state" type="String"
+					uniqueMembers="false" levelType="Regular" hideMemberIf="Never"
+					caption="state">
+				</Level>
+				<Level name="city" visible="true" column="city" type="String"
+					uniqueMembers="false" levelType="Regular" hideMemberIf="Never"
+					caption="city">
+				</Level>
+			</Hierarchy>
+		</Dimension>
+		<Dimension type="StandardDimension" visible="true"
+			foreignKey="product_code" highCardinality="false" name="product"
+			caption="product">
+			<Hierarchy name="h_product" visible="true" hasAll="true"
+				allMemberName="all products" allLevelName="all levels" primaryKey="product_code"
+				caption="products" description="products hierarchy">
+				<Table name="dim_products" alias="products dimension">
+				</Table>
+				<Level name="product type" visible="true" column="product_type"
+					type="String" uniqueMembers="false" levelType="Regular"
+					hideMemberIf="Never" caption="product type" description="product types">
+				</Level>
+				<Level name="product code" visible="true" column="product_code"
+					type="String" uniqueMembers="false" levelType="Regular"
+					hideMemberIf="Never" caption="product code" description="product code">
+				</Level>
+			</Hierarchy>
+		</Dimension>
+		<Dimension type="TimeDimension" visible="true" foreignKey="date_id"
+			highCardinality="false" name="time dimension" caption="time">
+			<Hierarchy name="h_month" visible="true" hasAll="true"
+				allMemberName="all years" allLevelName="all" primaryKey="date_id"
+				caption="months hierarchy" description="months hierarchy">
+				<Table name="dim_time" alias="time dimension">
+				</Table>
+				<Level name="year" visible="true" column="year" type="String"
+					uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never"
+					caption="年">
+				</Level>
+				<Level name="quarter" visible="true" column="quarter" type="String"
+					uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="Never"
+					caption="季">
+				</Level>
+				<Level name="month" visible="true" column="month_number"
+					nameColumn="month_long_name" type="Integer" uniqueMembers="true"
+					levelType="TimeMonths" hideMemberIf="Never" caption="月">
+				</Level>
+			</Hierarchy>
+		</Dimension>
+		<Measure name="销售额" column="amount" datatype="Numeric"
+			formatString="#,###.## $" aggregator="sum" visible="true">
+		</Measure>
+		<Measure name="数量" column="quantity" datatype="Integer"
+			aggregator="sum" visible="true">
+		</Measure>
+	</Cube>
+</Schema>

@@ -1,0 +1,55 @@
+<Schema name="污染物分析">
+  <Cube name="污染物" visible="true" description="sales cube or Sauce Dallas" cache="true" enabled="true">
+    <Table name="gas_fac_day_analysis_aqi">
+    </Table>
+    <Dimension type="StandardDimension" visible="true" foreignKey="city_id" highCardinality="false" name="customers dimension" caption="盟市纬度">
+      <Hierarchy name="city_id" visible="true" hasAll="true" allMemberName="All" allLevelName="全部" primaryKey="city_id" caption="region" 
+        description="regions hierarchy">
+        <Table name="sys_city" alias="city dimension">
+        </Table>
+        <Level name="city" visible="true" column="city_id" nameColumn="city_name"  type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" caption="盟市">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="PSCODE" highCardinality="false" 
+      name="Res dimension" caption="企业纬度">
+      <Hierarchy name="Res" visible="true" hasAll="true" allMemberName="all res" allLevelName="全部" primaryKey="PSCode" caption="res" description="res hierarchy">
+        <Table name="res_baseinfo" alias="res dimension">
+        </Table>
+        <Level name="PSName" visible="true" column="PSCode" nameColumn="PSName" type="String" 
+          uniqueMembers="false" levelType="Regular" hideMemberIf="Never" caption="企业名称" 
+          description="PSName">
+        </Level>
+         <Level name="IndustryTypeName" visible="true" column="IndustryTypeName" type="String" 
+          uniqueMembers="false" levelType="Regular" hideMemberIf="Never" caption="企业类型" 
+          description="IndustryTypeName">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="POLLTYPE" highCardinality="false" name="Res" caption="污染物类别">
+      <Hierarchy name="PollType" visible="true" hasAll="true" allMemberName="all res" allLevelName="全部" primaryKey="POLLUTANTCODE" caption="污染物类别" description="hierarchy">
+        <Table name="t_cod_automonitor_pollute" alias="pollType dimension">
+        </Table>
+        <Level name="POLLUTANTNAME" visible="true" column="POLLUTANTCODE" nameColumn="POLLUTANTNAME" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" caption="污染物名称" description="污染物名称">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="TimeDimension" visible="true" foreignKey="id" highCardinality="false" name="time dimension" caption="时间纬度">
+      <Hierarchy name="h_month" visible="true" hasAll="true" allMemberName="all years" allLevelName="全部" primaryKey="id" caption="months hierarchy" description="months hierarchy">
+        <Table name="gas_fac_day_analysis_aqi" alias="time dimension">
+        </Table>
+        <Level name="Year" visible="true" column="year" type="String" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never" caption="年">
+        </Level>
+        <Level name="Month" visible="true" column="month" type="String" uniqueMembers="true" levelType="TimeMonths" hideMemberIf="Never" caption="月">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+   <Measure name="浓度" column="AVGSTRENGTH" datatype="Numeric" formatString="#,###.00" 
+     aggregator="avg" visible="true">
+    </Measure>
+    <Measure name="流量" column="AVGFLOW" datatype="Numeric" formatString="#,###.00" aggregator="sum" visible="true">
+    </Measure>
+      <Measure name="排放量" column="AMOUNT" datatype="Numeric" formatString="#,###.00" aggregator="sum" visible="true">
+    </Measure>
+  </Cube>
+</Schema>

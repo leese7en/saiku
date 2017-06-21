@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="saiku"
+  id="myeclipse.1466998334317"
+  context-root="/saiku"
+  j2ee-spec="5.0"
+  archive="saiku.war">
+  <attributes>
+    <attribute name="webrootdir" value="/WebRoot" />
+  </attributes>
+</project-module>
+
